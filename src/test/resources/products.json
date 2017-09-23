@@ -1,0 +1,53 @@
+[
+    {
+        "name": "Roses",
+        "code": "R12",
+        "bundles": [
+            {
+                "amount": 5,
+                "price": 699
+            },
+            {
+                "amount": 10,
+                "price": 1299
+            }
+        ]
+    },
+    {
+        "name": "Lilies",
+        "code": "L09",
+        "bundles": [
+            {
+                "amount": 3,
+                "price": 995
+            },
+            {
+                "amount": 6,
+                "price": 1695
+            },
+            {
+                "amount": 9,
+                "price": 2495
+            }
+        ]
+    },
+    {
+        "name": "Tulips",
+        "code": "T58",
+        "bundles": [
+            {
+                "amount": 3,
+                "price": 595
+            },
+            {
+                "amount": 5,
+                "price": 995
+            },
+            {
+                "amount": 9,
+                "price": 1699
+            }
+        ]
+    }  
+]
+  
