@@ -16,7 +16,18 @@ public class Orders {
     }
 
     public BundledOrder bundle(final Order order) {
+        validate(order);
+
         return null;
+    }
+
+    private void validate(final Order order) {
+        if (order == null) {
+            throw new NullPointerException("Order is null");
+        }
+        if (order.items().isEmpty()) {
+            throw new IllegalArgumentException("Order is empty");
+        }
     }
 
 }

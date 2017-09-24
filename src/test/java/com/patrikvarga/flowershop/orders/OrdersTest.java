@@ -19,7 +19,8 @@ public class OrdersTest {
     private final Flower bundledOnlyFlower = new Flower("SBF", "Bundled-only flower", asList(bundleOfThree));
     private final Flower bundledFlower = new Flower("BF", "Bundled flower", asList(bundleOfOne, bundleOfThree));
 
-    private final MockFlowers mockFlowers = new MockFlowers();
+    private List<Flower> mockFlowerList = new ArrayList<>();
+    private final Flowers mockFlowers = new Flowers(() -> mockFlowerList);
 
     private final Orders orders = new Orders(mockFlowers);
 
@@ -39,21 +40,6 @@ public class OrdersTest {
         order.addItem("unknown", 42);
 
         orders.bundle(order);
-    }
-
-    private static class MockFlowers extends Flowers {
-
-        private List<Flower> flowers = new ArrayList<>();
-
-        public MockFlowers() {
-            super(null);
-        }
-
-        @Override
-        public List<Flower> findAll() {
-            return flowers;
-        }
-
     }
 
 }
