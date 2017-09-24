@@ -10,8 +10,8 @@ import java.util.Objects;
  */
 public class Bundle {
 
-    private final int amount;
-    private final BigDecimal price;
+    final int amount;
+    final BigDecimal price;
 
     private Bundle() {
         // for Jackson :(

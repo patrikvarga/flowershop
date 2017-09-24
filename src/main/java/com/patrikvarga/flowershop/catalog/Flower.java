@@ -1,26 +1,31 @@
 package com.patrikvarga.flowershop.catalog;
 
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 /**
- * Details of a flower including bundles being sold.
+ * Details of a flower including bundles being sold. Ordering is based on name.
  *
  * @author <a href="mailto:varga.patrik@gmail.com">Patrik Varga</a>
  */
-public class Flower {
+public class Flower implements Comparable<Flower> {
+
+    private static final Comparator<String> NULL_SAFE_STRING_COMPARATOR
+            = Comparator.nullsFirst(String::compareToIgnoreCase);
 
     public final String code;
     public final String name;
     private final List<Bundle> bundles;
 
     private Flower() {
+        // for Jackson :(
         this.code = null;
         this.name = null;
         this.bundles = null;
     }
 
     public Flower(final String code, final String name, final List<Bundle> bundles) {
-        // for Jackson :(
         this.code = code;
         this.name = name;
         this.bundles = bundles;
@@ -34,8 +39,17 @@ public class Flower {
         return bundles.remove(bundle);
     }
 
+    public List<Bundle> bundles() {
+        return new ArrayList<>(bundles);
+    }
+
     @Override
     public String toString() {
         return "Product{" + "code=" + code + ", name=" + name + ", bundles=" + bundles + '}';
+    }
+
+    @Override
+    public int compareTo(final Flower other) {
+        return NULL_SAFE_STRING_COMPARATOR.compare(this.code, other.code);
     }
 }

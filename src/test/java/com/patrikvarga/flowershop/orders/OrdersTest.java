@@ -1,31 +1,25 @@
 package com.patrikvarga.flowershop.orders;
 
 import com.patrikvarga.flowershop.catalog.Bundle;
-import java.math.BigDecimal;
 import org.junit.Test;
 
+import static com.patrikvarga.flowershop.catalog.JsonCatalogSourceTest.DOLLARS_12_99;
+import static com.patrikvarga.flowershop.catalog.JsonCatalogSourceTest.DOLLARS_16_95;
+import static com.patrikvarga.flowershop.catalog.JsonCatalogSourceTest.DOLLARS_24_95;
+import static com.patrikvarga.flowershop.catalog.JsonCatalogSourceTest.DOLLARS_41_90;
+import static com.patrikvarga.flowershop.catalog.JsonCatalogSourceTest.DOLLARS_5_95;
+import static com.patrikvarga.flowershop.catalog.JsonCatalogSourceTest.DOLLARS_9_95;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
+import static com.patrikvarga.flowershop.catalog.JsonCatalogSourceTest.DOLLARS_25_85;
 
 public class OrdersTest {
-
-    private static final BigDecimal DOLLARS_12_99 = toDollars(1299);
-    private static final BigDecimal DOLLARS_41_90 = toDollars(4190);
-    private static final BigDecimal DOLLARS_24_95 = toDollars(2495);
-    private static final BigDecimal DOLLARS_16_95 = toDollars(1695);
-    private static final BigDecimal DOLLARS_2_585 = toDollars(2585);
-    private static final BigDecimal DOLLARS_9_95 = toDollars(995);
-    private static final BigDecimal DOLLARS_5_95 = toDollars(595);
 
     private static final String TULIPS_CODE = "T58";
     private static final String LILIES_CODE = "L09";
     private static final String ROSES_CODE = "R12";
 
     private final Orders orders = new Orders();
-
-    private static BigDecimal toDollars(final long cents) {
-        return BigDecimal.valueOf(cents, 2);
-    }
 
     @Test
     public void demonstrateDocumentationExample() {
@@ -51,7 +45,7 @@ public class OrdersTest {
         assertThat(liliesDetails.bundles().get(new Bundle(6, DOLLARS_16_95)), is(1));
 
         assertThat(tulipsDetails.amount(), is(13));
-        assertThat(tulipsDetails.totalCost(), is(DOLLARS_2_585));
+        assertThat(tulipsDetails.totalCost(), is(DOLLARS_25_85));
         assertThat(tulipsDetails.bundles().size(), is(2));
         assertThat(tulipsDetails.bundles().get(new Bundle(5, DOLLARS_9_95)), is(2));
         assertThat(tulipsDetails.bundles().get(new Bundle(3, DOLLARS_5_95)), is(1));
