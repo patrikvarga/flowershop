@@ -1,53 +1,59 @@
 package com.patrikvarga.flowershop.orders;
 
 import com.patrikvarga.flowershop.catalog.Bundle;
+import com.patrikvarga.flowershop.catalog.Flower;
+import com.patrikvarga.flowershop.catalog.Flowers;
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 import org.junit.Test;
 
-import static com.patrikvarga.flowershop.catalog.JsonCatalogSourceTest.DOLLARS_12_99;
-import static com.patrikvarga.flowershop.catalog.JsonCatalogSourceTest.DOLLARS_16_95;
-import static com.patrikvarga.flowershop.catalog.JsonCatalogSourceTest.DOLLARS_24_95;
-import static com.patrikvarga.flowershop.catalog.JsonCatalogSourceTest.DOLLARS_41_90;
-import static com.patrikvarga.flowershop.catalog.JsonCatalogSourceTest.DOLLARS_5_95;
-import static com.patrikvarga.flowershop.catalog.JsonCatalogSourceTest.DOLLARS_9_95;
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
-import static com.patrikvarga.flowershop.catalog.JsonCatalogSourceTest.DOLLARS_25_85;
+import static java.util.Arrays.asList;
 
 public class OrdersTest {
 
-    private static final String TULIPS_CODE = "T58";
-    private static final String LILIES_CODE = "L09";
-    private static final String ROSES_CODE = "R12";
+    private final Bundle bundleOfOne = new Bundle(1, BigDecimal.ONE);
+    private final Bundle bundleOfThree = new Bundle(3, BigDecimal.valueOf(2L));
 
-    private final Orders orders = new Orders();
+    private final Flower singleFlower = new Flower("SF", "Single flower", asList(bundleOfOne));
+    private final Flower bundledOnlyFlower = new Flower("SBF", "Bundled-only flower", asList(bundleOfThree));
+    private final Flower bundledFlower = new Flower("BF", "Bundled flower", asList(bundleOfOne, bundleOfThree));
 
-    @Test
-    public void demonstrateDocumentationExample() {
-        final Order order = new Order();
-        order.addItem(ROSES_CODE, 10);
-        order.addItem(LILIES_CODE, 15);
-        order.addItem(TULIPS_CODE, 13);
+    private final MockFlowers mockFlowers = new MockFlowers();
 
-        final BundledOrder bundledOrder = orders.bundle(order);
-        final BundlingDetails rosesDetails = bundledOrder.detailsOf(ROSES_CODE);
-        final BundlingDetails liliesDetails = bundledOrder.detailsOf(LILIES_CODE);
-        final BundlingDetails tulipsDetails = bundledOrder.detailsOf(TULIPS_CODE);
+    private final Orders orders = new Orders(mockFlowers);
 
-        assertThat(rosesDetails.amount(), is(10));
-        assertThat(rosesDetails.totalCost(), is(DOLLARS_12_99));
-        assertThat(rosesDetails.bundles().size(), is(1));
-        assertThat(rosesDetails.bundles().get(new Bundle(10, DOLLARS_12_99)), is(1));
-
-        assertThat(liliesDetails.amount(), is(15));
-        assertThat(liliesDetails.totalCost(), is(DOLLARS_41_90));
-        assertThat(liliesDetails.bundles().size(), is(2));
-        assertThat(liliesDetails.bundles().get(new Bundle(9, DOLLARS_24_95)), is(1));
-        assertThat(liliesDetails.bundles().get(new Bundle(6, DOLLARS_16_95)), is(1));
-
-        assertThat(tulipsDetails.amount(), is(13));
-        assertThat(tulipsDetails.totalCost(), is(DOLLARS_25_85));
-        assertThat(tulipsDetails.bundles().size(), is(2));
-        assertThat(tulipsDetails.bundles().get(new Bundle(5, DOLLARS_9_95)), is(2));
-        assertThat(tulipsDetails.bundles().get(new Bundle(3, DOLLARS_5_95)), is(1));
+    @Test(expected = NullPointerException.class)
+    public void failOnNullOrder() {
+        orders.bundle(null);
     }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void failOnEmptyOrder() {
+        orders.bundle(new Order());
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void failOnUnknownFlower() {
+        final Order order = new Order();
+        order.addItem("unknown", 42);
+
+        orders.bundle(order);
+    }
+
+    private static class MockFlowers extends Flowers {
+
+        private List<Flower> flowers = new ArrayList<>();
+
+        public MockFlowers() {
+            super(null);
+        }
+
+        @Override
+        public List<Flower> findAll() {
+            return flowers;
+        }
+
+    }
+
 }
