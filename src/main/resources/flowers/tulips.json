@@ -1,0 +1,18 @@
+{
+    "name": "Tulips",
+    "code": "T58",
+    "bundles": [
+        {
+            "amount": 3,
+            "price": 5.95
+        },
+        {
+            "amount": 5,
+            "price": 9.95
+        },
+        {
+            "amount": 9,
+            "price": 16.99
+        }
+    ]
+}  

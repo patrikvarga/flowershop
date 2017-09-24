@@ -17,6 +17,10 @@ public class OrdersTest {
     private static final BigDecimal DOLLARS_9_95 = toDollars(995);
     private static final BigDecimal DOLLARS_5_95 = toDollars(595);
 
+    private static final String TULIPS_CODE = "T58";
+    private static final String LILIES_CODE = "L09";
+    private static final String ROSES_CODE = "R12";
+
     private final Orders orders = new Orders();
 
     private static BigDecimal toDollars(final long cents) {
@@ -26,14 +30,14 @@ public class OrdersTest {
     @Test
     public void demonstrateDocumentationExample() {
         final Order order = new Order();
-        order.addItem("R12", 10);
-        order.addItem("L09", 15);
-        order.addItem("T58", 13);
+        order.addItem(ROSES_CODE, 10);
+        order.addItem(LILIES_CODE, 15);
+        order.addItem(TULIPS_CODE, 13);
 
         final BundledOrder bundledOrder = orders.bundle(order);
-        final BundlingDetails rosesDetails = bundledOrder.detailsOf("R12");
-        final BundlingDetails liliesDetails = bundledOrder.detailsOf("L09");
-        final BundlingDetails tulipsDetails = bundledOrder.detailsOf("T58");
+        final BundlingDetails rosesDetails = bundledOrder.detailsOf(ROSES_CODE);
+        final BundlingDetails liliesDetails = bundledOrder.detailsOf(LILIES_CODE);
+        final BundlingDetails tulipsDetails = bundledOrder.detailsOf(TULIPS_CODE);
 
         assertThat(rosesDetails.amount(), is(10));
         assertThat(rosesDetails.totalCost(), is(DOLLARS_12_99));

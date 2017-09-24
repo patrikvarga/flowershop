@@ -13,7 +13,13 @@ public class Bundle {
     private final int amount;
     private final BigDecimal price;
 
-    public Bundle(int amount, BigDecimal price) {
+    private Bundle() {
+        // for Jackson :(
+        this.amount = 0;
+        this.price = null;
+    }
+
+    public Bundle(final int amount, final BigDecimal price) {
         this.amount = amount;
         this.price = price;
     }

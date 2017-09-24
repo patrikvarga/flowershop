@@ -16,6 +16,10 @@ public class Order {
     public Order() {
     }
 
+    public Map<String, Integer> items() {
+        return items;
+    }
+
     public void addItem(final String productCode, final int amount) {
         items.put(productCode, amount);
     }

@@ -47,6 +47,16 @@
             <artifactId>log4j-core</artifactId>
             <version>${log4j.version}</version>
         </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+            <version>${jackson.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.module</groupId>
+            <artifactId>jackson-module-parameter-names</artifactId>
+            <version>${jackson.version}</version>
+        </dependency>
     </dependencies>
     
 </project>

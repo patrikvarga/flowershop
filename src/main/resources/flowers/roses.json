@@ -1,0 +1,14 @@
+{
+    "code": "R12",
+    "name": "Roses",
+    "bundles": [
+        {
+            "amount": 5,
+            "price": 6.99
+        },
+        {
+            "amount": 10,
+            "price": 12.99
+        }
+    ]
+}
