@@ -2,6 +2,7 @@ package com.patrikvarga.flowershop.orders;
 
 import com.patrikvarga.flowershop.catalog.Bundle;
 import com.patrikvarga.flowershop.catalog.Flower;
+import com.patrikvarga.flowershop.catalog.FlowerNotFoundException;
 import com.patrikvarga.flowershop.catalog.Flowers;
 import java.math.BigDecimal;
 import java.util.Iterator;
@@ -40,7 +41,7 @@ public class OrdersTest {
         orders.bundle(new Order());
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test(expected = FlowerNotFoundException.class)
     public void failOnUnknownFlower() {
         final Order order = new Order();
         order.addItem("unknown", 42);
@@ -121,13 +122,13 @@ public class OrdersTest {
         final BundledOrder bundledOrder = orders.bundle(order);
         final BundlingDetails details = bundledOrder.detailsOf(bundledOnlyFlower.code());
         final Map.Entry<Bundle, Integer> bundleEntry = details.bundles().entrySet().iterator().next();
-        final Bundle expectedBundle = new Bundle(1, BUNDLE_PRICE);
+        final Bundle expectedBundle = new Bundle(3, BUNDLE_PRICE);
 
         assertThat(details.amount(), is(amount));
         assertThat(details.totalCost(), is(BUNDLE_PRICE));
-        assertThat(details.bundles().size(), is(amount));
+        assertThat(details.bundles().size(), is(1));
         assertThat(bundleEntry.getKey(), is(expectedBundle));
-        assertThat(bundleEntry.getValue(), is(amount));
+        assertThat(bundleEntry.getValue(), is(1));
     }
 
     @Test
@@ -141,13 +142,13 @@ public class OrdersTest {
         final BundledOrder bundledOrder = orders.bundle(order);
         final BundlingDetails details = bundledOrder.detailsOf(bundledFlower.code());
         final Map.Entry<Bundle, Integer> bundleEntry = details.bundles().entrySet().iterator().next();
-        final Bundle expectedBundle = new Bundle(1, BUNDLE_PRICE);
+        final Bundle expectedBundle = new Bundle(3, BUNDLE_PRICE);
 
         assertThat(details.amount(), is(amount));
         assertThat(details.totalCost(), is(BUNDLE_PRICE));
-        assertThat(details.bundles().size(), is(amount));
+        assertThat(details.bundles().size(), is(1));
         assertThat(bundleEntry.getKey(), is(expectedBundle));
-        assertThat(bundleEntry.getValue(), is(amount));
+        assertThat(bundleEntry.getValue(), is(1));
     }
 
     @Test
@@ -164,7 +165,7 @@ public class OrdersTest {
         final Map.Entry<Bundle, Integer> bundleEntry3 = bundleIterator.next();
         final Map.Entry<Bundle, Integer> bundleEntry1 = bundleIterator.next();
         final Bundle expectedBundle3 = new Bundle(3, BUNDLE_PRICE);
-        final Bundle expectedBundle1 = new Bundle(1, BUNDLE_PRICE);
+        final Bundle expectedBundle1 = new Bundle(1, SINGLE_PRICE);
         final BigDecimal expectedTotalCost = SINGLE_PRICE.add(BUNDLE_PRICE);
 
         assertThat(details.amount(), is(amount));
