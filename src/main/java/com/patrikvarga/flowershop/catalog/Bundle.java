@@ -1,6 +1,7 @@
 package com.patrikvarga.flowershop.catalog;
 
 import java.math.BigDecimal;
+import java.util.Comparator;
 import java.util.Objects;
 
 /**
@@ -8,10 +9,12 @@ import java.util.Objects;
  *
  * @author <a href="mailto:varga.patrik@gmail.com">Patrik Varga</a>
  */
-public class Bundle {
+public class Bundle implements Comparable<Bundle> {
 
-    final int amount;
-    final BigDecimal price;
+    private static final Comparator<Bundle> AMOUNT_COMPARATOR = Comparator.comparingInt(Bundle::amount);
+
+    private final int amount;
+    private final BigDecimal price;
 
     private Bundle() {
         // for Jackson :(
@@ -22,6 +25,14 @@ public class Bundle {
     public Bundle(final int amount, final BigDecimal price) {
         this.amount = amount;
         this.price = price;
+    }
+
+    public int amount() {
+        return amount;
+    }
+
+    public BigDecimal price() {
+        return price;
     }
 
     @Override
@@ -57,4 +68,10 @@ public class Bundle {
     public String toString() {
         return "Bundle{" + "amount=" + amount + ", price=" + price + '}';
     }
+
+    @Override
+    public int compareTo(final Bundle other) {
+        return AMOUNT_COMPARATOR.compare(this, other);
+    }
+
 }

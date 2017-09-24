@@ -1,6 +1,7 @@
 package com.patrikvarga.flowershop.catalog;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
@@ -14,8 +15,8 @@ public class Flower implements Comparable<Flower> {
     private static final Comparator<String> NULL_SAFE_STRING_COMPARATOR
             = Comparator.nullsFirst(String::compareToIgnoreCase);
 
-    public final String code;
-    public final String name;
+    private final String code;
+    private final String name;
     private final List<Bundle> bundles;
 
     private Flower() {
@@ -31,8 +32,17 @@ public class Flower implements Comparable<Flower> {
         this.bundles = bundles;
     }
 
+    public String code() {
+        return code;
+    }
+
+    public String name() {
+        return name;
+    }
+
     public void addBundle(final Bundle bundle) {
         bundles.add(bundle);
+        Collections.sort(bundles);
     }
 
     public boolean removeBundle(final Bundle bundle) {

@@ -16,6 +16,9 @@ public class Order {
     public Order() {
     }
 
+    /**
+     * The amount of ordered items per flower (ie. per product code).
+     */
     public Map<String, Integer> items() {
         return items;
     }

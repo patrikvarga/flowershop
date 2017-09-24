@@ -16,7 +16,7 @@ public class BundledOrder {
         return detailsPerProduct.get(productCode);
     }
 
-    public void addDetails(final String productCode, final BundlingDetails beakdown) {
-        detailsPerProduct.put(productCode, beakdown);
+    public void addDetails(final String productCode, final BundlingDetails details) {
+        detailsPerProduct.put(productCode, details);
     }
 }

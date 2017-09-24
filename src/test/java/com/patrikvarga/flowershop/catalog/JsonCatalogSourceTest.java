@@ -42,30 +42,30 @@ public class JsonCatalogSourceTest {
 
         assertThat(flowers.size(), is(3));
 
-        assertThat(flower1.name, is("Lilies"));
+        assertThat(flower1.name(), is("Lilies"));
         assertThat(bundles1.size(), is(3));
-        assertThat(bundles1.get(0).amount, is(3));
-        assertThat(bundles1.get(0).price, is(DOLLARS_9_95));
-        assertThat(bundles1.get(1).amount, is(6));
-        assertThat(bundles1.get(1).price, is(DOLLARS_16_95));
-        assertThat(bundles1.get(2).amount, is(9));
-        assertThat(bundles1.get(2).price, is(DOLLARS_24_95));
+        assertThat(bundles1.get(0).amount(), is(3));
+        assertThat(bundles1.get(0).price(), is(DOLLARS_9_95));
+        assertThat(bundles1.get(1).amount(), is(6));
+        assertThat(bundles1.get(1).price(), is(DOLLARS_16_95));
+        assertThat(bundles1.get(2).amount(), is(9));
+        assertThat(bundles1.get(2).price(), is(DOLLARS_24_95));
 
-        assertThat(flower2.name, is("Roses"));
+        assertThat(flower2.name(), is("Roses"));
         assertThat(bundles2.size(), is(2));
-        assertThat(bundles2.get(0).amount, is(5));
-        assertThat(bundles2.get(0).price, is(DOLLARS_6_99));
-        assertThat(bundles2.get(1).amount, is(10));
-        assertThat(bundles2.get(1).price, is(DOLLARS_12_99));
+        assertThat(bundles2.get(0).amount(), is(5));
+        assertThat(bundles2.get(0).price(), is(DOLLARS_6_99));
+        assertThat(bundles2.get(1).amount(), is(10));
+        assertThat(bundles2.get(1).price(), is(DOLLARS_12_99));
 
-        assertThat(flower3.name, is("Tulips"));
+        assertThat(flower3.name(), is("Tulips"));
         assertThat(bundles3.size(), is(3));
-        assertThat(bundles3.get(0).amount, is(3));
-        assertThat(bundles3.get(0).price, is(DOLLARS_5_95));
-        assertThat(bundles3.get(1).amount, is(5));
-        assertThat(bundles3.get(1).price, is(DOLLARS_9_95));
-        assertThat(bundles3.get(2).amount, is(9));
-        assertThat(bundles3.get(2).price, is(DOLLARS_16_99));
+        assertThat(bundles3.get(0).amount(), is(3));
+        assertThat(bundles3.get(0).price(), is(DOLLARS_5_95));
+        assertThat(bundles3.get(1).amount(), is(5));
+        assertThat(bundles3.get(1).price(), is(DOLLARS_9_95));
+        assertThat(bundles3.get(2).amount(), is(9));
+        assertThat(bundles3.get(2).price(), is(DOLLARS_16_99));
 
     }
 
