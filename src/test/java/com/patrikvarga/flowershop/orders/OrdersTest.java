@@ -17,15 +17,21 @@ import static org.junit.Assert.assertThat;
 public class OrdersTest {
 
     private static final BigDecimal SINGLE_PRICE = BigDecimal.ONE;
-    private static final BigDecimal BUNDLE_PRICE = BigDecimal.valueOf(2L);
+    private static final BigDecimal BUNDLE_3_PRICE = BigDecimal.valueOf(2L);
+    private static final BigDecimal BUNDLE_4_PRICE = BigDecimal.valueOf(3L);
+    private static final BigDecimal BUNDLE_7_PRICE = BigDecimal.valueOf(4L);
 
     private final Bundle bundleOfOne = new Bundle(1, SINGLE_PRICE);
-    private final Bundle bundleOfThree = new Bundle(3, BUNDLE_PRICE);
+    private final Bundle bundleOfThree = new Bundle(3, BUNDLE_3_PRICE);
+    private final Bundle bundleOfFour = new Bundle(4, BUNDLE_4_PRICE);
+    private final Bundle bundleOfSeven = new Bundle(7, BUNDLE_7_PRICE);
 
     private final Flower flowerWithoutBundles = new Flower("DF", "Dummy flower", emptyList());
     private final Flower singleFlower = new Flower("SF", "Single flower", asList(bundleOfOne));
     private final Flower bundledOnlyFlower = new Flower("SBF", "Bundled-only flower", asList(bundleOfThree));
     private final Flower bundledFlower = new Flower("BF", "Bundled flower", asList(bundleOfOne, bundleOfThree));
+    private final Flower bundled347Flower = new Flower("BF347", "Bundled 3/4/7 flower", asList(bundleOfThree, bundleOfFour, bundleOfSeven));
+    private final Flower bundled47Flower = new Flower("BF47", "Bundled 4/7 flower", asList(bundleOfFour, bundleOfSeven));
 
     private final Flowers mockFlowers = new Flowers(() -> emptyList());
 
@@ -61,11 +67,22 @@ public class OrdersTest {
     }
 
     @Test(expected = NoMatchingBundlesException.class)
-    public void failIfCannotFulfillOrderWithDefinedBundles() {
+    public void failIfCannotFulfillOrderWithSingleDefinedBundle() {
         mockFlowers.add(bundledOnlyFlower);
 
         final Order order = new Order();
         order.addItem(bundledOnlyFlower.code(), 1);
+
+        orders.bundle(order);
+    }
+
+    @Test(expected = NoMatchingBundlesException.class)
+    public void failIfCannotFulfillOrderWithMultipleDefinedBundles() {
+        mockFlowers.add(bundled47Flower);
+
+        final Order order = new Order();
+        final int amount = 13;
+        order.addItem(bundled47Flower.code(), amount);
 
         orders.bundle(order);
     }
@@ -122,10 +139,10 @@ public class OrdersTest {
         final BundledOrder bundledOrder = orders.bundle(order);
         final BundlingDetails details = bundledOrder.detailsOf(bundledOnlyFlower.code());
         final Map.Entry<Bundle, Integer> bundleEntry = details.bundles().entrySet().iterator().next();
-        final Bundle expectedBundle = new Bundle(3, BUNDLE_PRICE);
+        final Bundle expectedBundle = new Bundle(3, BUNDLE_3_PRICE);
 
         assertThat(details.amount(), is(amount));
-        assertThat(details.totalCost(), is(BUNDLE_PRICE));
+        assertThat(details.totalCost(), is(BUNDLE_3_PRICE));
         assertThat(details.bundles().size(), is(1));
         assertThat(bundleEntry.getKey(), is(expectedBundle));
         assertThat(bundleEntry.getValue(), is(1));
@@ -142,10 +159,10 @@ public class OrdersTest {
         final BundledOrder bundledOrder = orders.bundle(order);
         final BundlingDetails details = bundledOrder.detailsOf(bundledFlower.code());
         final Map.Entry<Bundle, Integer> bundleEntry = details.bundles().entrySet().iterator().next();
-        final Bundle expectedBundle = new Bundle(3, BUNDLE_PRICE);
+        final Bundle expectedBundle = new Bundle(3, BUNDLE_3_PRICE);
 
         assertThat(details.amount(), is(amount));
-        assertThat(details.totalCost(), is(BUNDLE_PRICE));
+        assertThat(details.totalCost(), is(BUNDLE_3_PRICE));
         assertThat(details.bundles().size(), is(1));
         assertThat(bundleEntry.getKey(), is(expectedBundle));
         assertThat(bundleEntry.getValue(), is(1));
@@ -164,9 +181,9 @@ public class OrdersTest {
         final Iterator<Map.Entry<Bundle, Integer>> bundleIterator = details.bundles().entrySet().iterator();
         final Map.Entry<Bundle, Integer> bundleEntry3 = bundleIterator.next();
         final Map.Entry<Bundle, Integer> bundleEntry1 = bundleIterator.next();
-        final Bundle expectedBundle3 = new Bundle(3, BUNDLE_PRICE);
+        final Bundle expectedBundle3 = new Bundle(3, BUNDLE_3_PRICE);
         final Bundle expectedBundle1 = new Bundle(1, SINGLE_PRICE);
-        final BigDecimal expectedTotalCost = SINGLE_PRICE.add(BUNDLE_PRICE);
+        final BigDecimal expectedTotalCost = SINGLE_PRICE.add(BUNDLE_3_PRICE);
 
         assertThat(details.amount(), is(amount));
         assertThat(details.totalCost(), is(expectedTotalCost));
@@ -177,6 +194,26 @@ public class OrdersTest {
 
         assertThat(bundleEntry1.getKey(), is(expectedBundle1));
         assertThat(bundleEntry1.getValue(), is(1));
+    }
+
+    @Test
+    public void fulfillOrderWithMinimumNumberOfBundles() {
+        mockFlowers.add(bundled347Flower);
+
+        final Order order = new Order();
+        final int amount = 7;
+        order.addItem(bundled347Flower.code(), amount);
+
+        final BundledOrder bundledOrder = orders.bundle(order);
+        final BundlingDetails details = bundledOrder.detailsOf(bundled347Flower.code());
+        final Map.Entry<Bundle, Integer> bundleEntry = details.bundles().entrySet().iterator().next();
+        final Bundle expectedBundle = new Bundle(7, BUNDLE_7_PRICE);
+
+        assertThat(details.amount(), is(amount));
+        assertThat(details.totalCost(), is(BUNDLE_7_PRICE));
+        assertThat(details.bundles().size(), is(1));
+        assertThat(bundleEntry.getKey(), is(expectedBundle));
+        assertThat(bundleEntry.getValue(), is(1));
     }
 
 }
