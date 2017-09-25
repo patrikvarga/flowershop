@@ -5,6 +5,7 @@ import com.patrikvarga.flowershop.catalog.Flower;
 import com.patrikvarga.flowershop.catalog.Flowers;
 import java.math.BigDecimal;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -35,17 +36,30 @@ public class Orders {
 
     private BundlingDetails breakdown(final String produtCode, final int amount) {
         final Flower flower = flowers.find(produtCode);
+        final List<Bundle> availableBundles = flower.bundles();
+        if (availableBundles.isEmpty()) {
+            throw new NoMatchingBundlesException(amount, amount);
+        }
 
+        final List<Bundle> usedBundles
+                = CoinChangeSolver.minCange(
+                        availableBundles.stream().toArray(Bundle[]::new),
+                        Bundle::amount,
+                        amount
+                );
+
+        return breakdown(amount, usedBundles);
+    }
+
+    private BundlingDetails breakdown(final int amount, final List<Bundle> usedBundles) throws NoMatchingBundlesException {
         int amountLeft = amount;
         BigDecimal totalCost = BigDecimal.ZERO;
         final Map<Bundle, Integer> bundles = new HashMap<>();
 
-        for (Bundle availableBundle : flower.bundles()) {
-            while (availableBundle.amount() <= amountLeft) {
-                amountLeft -= availableBundle.amount();
-                totalCost = totalCost.add(availableBundle.price());
-                bundles.compute(availableBundle, (b, a) -> a == null ? 1 : a + 1);
-            }
+        for (Bundle availableBundle : usedBundles) {
+            amountLeft -= availableBundle.amount();
+            totalCost = totalCost.add(availableBundle.price());
+            bundles.compute(availableBundle, (b, a) -> a == null ? 1 : a + 1);
         }
         if (amountLeft != 0) {
             throw new NoMatchingBundlesException(amount, amountLeft);

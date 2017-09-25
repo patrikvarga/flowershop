@@ -42,7 +42,6 @@ public class Flower implements Comparable<Flower> {
 
     public void addBundle(final Bundle bundle) {
         bundles.add(bundle);
-        Collections.sort(bundles);
     }
 
     public boolean removeBundle(final Bundle bundle) {
@@ -50,7 +49,9 @@ public class Flower implements Comparable<Flower> {
     }
 
     public List<Bundle> bundles() {
-        return new ArrayList<>(bundles);
+        final List<Bundle> bundlesCopy = new ArrayList<>(bundles);
+        Collections.sort(bundlesCopy);
+        return bundlesCopy;
     }
 
     @Override
