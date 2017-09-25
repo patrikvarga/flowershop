@@ -17,14 +17,14 @@ public class Order {
     }
 
     /**
-     * The amount of ordered items per flower (ie. per product code).
+     * The amount of ordered items per flower (i.e. per product code).
      */
     public Map<String, Integer> items() {
         return items;
     }
 
     public void addItem(final String productCode, final int amount) {
-        items.put(productCode, amount);
+        items.compute(productCode, (c, a) -> a == null ? amount : a + amount);
     }
 
     public void removeItem(final String productCode) {

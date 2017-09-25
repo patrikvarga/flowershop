@@ -25,4 +25,30 @@ public class BundledOrder {
         return "BundledOrder{" + "detailsPerProduct=" + detailsPerProduct + '}';
     }
 
+    public String output() {
+        final StringBuilder sb = new StringBuilder();
+
+        detailsPerProduct.forEach((productCode, details) -> {
+            sb
+                    .append("\n")
+                    .append(details.amount())
+                    .append(" ")
+                    .append(productCode)
+                    .append(" $")
+                    .append(details.totalCost());
+
+            details.bundles().forEach((bundle, amount) -> {
+                sb
+                        .append("\n\t")
+                        .append(amount)
+                        .append(" x ")
+                        .append(bundle.amount())
+                        .append(" $")
+                        .append(bundle.price());
+            });
+        });
+
+        return sb.toString();
+    }
+
 }

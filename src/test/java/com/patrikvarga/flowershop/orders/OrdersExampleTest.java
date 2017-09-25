@@ -3,6 +3,12 @@ package com.patrikvarga.flowershop.orders;
 import com.patrikvarga.flowershop.catalog.Bundle;
 import com.patrikvarga.flowershop.catalog.Flowers;
 import com.patrikvarga.flowershop.catalog.JsonCatalogSource;
+import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.nio.file.Paths;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.junit.Test;
 
 import static com.patrikvarga.flowershop.catalog.JsonCatalogSourceTest.DOLLARS_12_99;
@@ -22,20 +28,37 @@ import static org.junit.Assert.assertThat;
  */
 public class OrdersExampleTest {
 
+    private static final Logger LOGGER = LogManager.getLogger(OrdersExampleTest.class);
+
     private static final String TULIPS_CODE = "T58";
     private static final String LILIES_CODE = "L09";
     private static final String ROSES_CODE = "R12";
 
+    private final TextOrderParser parser = new TextOrderParser();
+
     private final Orders orders = new Orders(new Flowers(new JsonCatalogSource()));
 
     @Test
-    public void demonstrateDocumentationExample() {
+    public void demonstrateDocumentationExampleWithPojo() {
         final Order order = new Order();
         order.addItem(ROSES_CODE, 10);
         order.addItem(LILIES_CODE, 15);
         order.addItem(TULIPS_CODE, 13);
 
+        demonstrateDocumentationExample(order);
+    }
+
+    @Test
+    public void demonstrateDocumentationExampleWithInputFile() throws URISyntaxException, IOException {
+        final URI exampleFile = getClass().getResource("/example_input.txt").toURI();
+        final Order orderInFile = parser.readOrder(Paths.get(exampleFile));
+
+        demonstrateDocumentationExample(orderInFile);
+    }
+
+    private void demonstrateDocumentationExample(final Order order) {
         final BundledOrder bundledOrder = orders.bundle(order);
+
         final BundlingDetails rosesDetails = bundledOrder.detailsOf(ROSES_CODE);
         final BundlingDetails liliesDetails = bundledOrder.detailsOf(LILIES_CODE);
         final BundlingDetails tulipsDetails = bundledOrder.detailsOf(TULIPS_CODE);
@@ -56,5 +79,8 @@ public class OrdersExampleTest {
         assertThat(tulipsDetails.bundles().size(), is(2));
         assertThat(tulipsDetails.bundles().get(new Bundle(5, DOLLARS_9_95)), is(2));
         assertThat(tulipsDetails.bundles().get(new Bundle(3, DOLLARS_5_95)), is(1));
+
+        // and demonstrate an example output
+        LOGGER.info("The bundled order's output is: \n{}", bundledOrder.output());
     }
 }
