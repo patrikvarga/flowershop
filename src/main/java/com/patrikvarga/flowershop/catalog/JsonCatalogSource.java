@@ -61,6 +61,7 @@ public class JsonCatalogSource implements CatalogSource {
     public List<Flower> read() {
         try {
             final URI flowerResourceDir = getClass().getClassLoader().getResource(CATALOG_DIR).toURI();
+            LOGGER.debug("Resource dir: {}", flowerResourceDir);
 
             final List<Flower> flowers = Files.list(Paths.get(flowerResourceDir))
                     .map(Path::toUri)

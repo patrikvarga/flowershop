@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.function.Function;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import static java.util.Collections.emptyList;
 
@@ -16,6 +18,8 @@ import static java.util.Collections.emptyList;
  * @author <a href="mailto:varga.patrik@gmail.com">Patrik Varga</a>
  */
 public class CoinChangeSolver {
+
+    private static final Logger LOGGER = LogManager.getLogger(CoinChangeSolver.class);
 
     /**
      * Find an optimal solution, i.e. one with minimum number of denominations.
@@ -32,7 +36,9 @@ public class CoinChangeSolver {
             return emptyList();
         }
         result.sort(Comparator.comparingInt(List::size));
-        return result.get(0);
+        final List<T> anOptimalSolution = result.get(0);
+        LOGGER.debug("Found an optimal solution: {}", anOptimalSolution);
+        return anOptimalSolution;
     }
 
     /**
@@ -51,6 +57,7 @@ public class CoinChangeSolver {
     ) {
         final List<List<T>> solutions = new ArrayList<>();
         change(denom, denomFunction, amount, new ArrayList<>(), 0, solutions);
+        LOGGER.debug("Found solutions: {}", solutions);
         return solutions;
     }
 
@@ -63,6 +70,7 @@ public class CoinChangeSolver {
             final List<List<T>> solutions
     ) {
         if (remaining == 0) {
+            LOGGER.debug("Found a solution: {}", coins);
             solutions.add(new ArrayList<>(coins));
         } else {
             final T currentDenom = denom[pos];

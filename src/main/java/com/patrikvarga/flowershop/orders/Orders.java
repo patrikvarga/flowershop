@@ -7,6 +7,8 @@ import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * Ordering related services of the flower shop.
@@ -15,6 +17,8 @@ import java.util.Map;
  */
 public class Orders {
 
+    private static final Logger LOGGER = LogManager.getLogger(Orders.class);
+
     private final Flowers flowers;
 
     public Orders(final Flowers flowers) {
@@ -22,6 +26,8 @@ public class Orders {
     }
 
     public BundledOrder bundle(final Order order) {
+        LOGGER.info("Bundling order: {}", order);
+
         validate(order);
 
         final BundledOrder bundledOrder = new BundledOrder();
@@ -31,6 +37,7 @@ public class Orders {
             bundledOrder.addDetails(productCode, details);
         });
 
+        LOGGER.info("Order successfully bundled as: {}", bundledOrder);
         return bundledOrder;
     }
 
@@ -48,10 +55,13 @@ public class Orders {
                         amount
                 );
 
-        return breakdown(amount, usedBundles);
+        return solutionAsBundlingDetails(amount, usedBundles);
     }
 
-    private BundlingDetails breakdown(final int amount, final List<Bundle> usedBundles) throws NoMatchingBundlesException {
+    private BundlingDetails solutionAsBundlingDetails(
+            final int amount,
+            final List<Bundle> usedBundles
+    ) throws NoMatchingBundlesException {
         int amountLeft = amount;
         BigDecimal totalCost = BigDecimal.ZERO;
         final Map<Bundle, Integer> bundles = new HashMap<>();
@@ -59,13 +69,17 @@ public class Orders {
         for (Bundle availableBundle : usedBundles) {
             amountLeft -= availableBundle.amount();
             totalCost = totalCost.add(availableBundle.price());
+            LOGGER.trace("Amount left: {}, total cost so far: ", amountLeft, totalCost);
             bundles.compute(availableBundle, (b, a) -> a == null ? 1 : a + 1);
         }
+
         if (amountLeft != 0) {
             throw new NoMatchingBundlesException(amount, amountLeft);
         }
 
-        return new BundlingDetails(amount, totalCost, bundles);
+        final BundlingDetails bundling = new BundlingDetails(amount, totalCost, bundles);
+        LOGGER.debug("Bundling details: {}", bundling);
+        return bundling;
     }
 
     private void validate(final Order order) {

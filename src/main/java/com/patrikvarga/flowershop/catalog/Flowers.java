@@ -30,10 +30,12 @@ public class Flowers {
 
     public void add(final Flower flower) {
         flowers.putIfAbsent(flower.code(), flower);
+        LOGGER.info("Flower added: {}", flower);
     }
 
     public void remove(final String productCode) {
-        flowers.remove(productCode);
+        final Flower removed = flowers.remove(productCode);
+        LOGGER.info("Flower removed: {}", removed);
     }
 
     public List<Flower> findAll() {

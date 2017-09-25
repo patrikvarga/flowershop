@@ -19,4 +19,10 @@ public class BundledOrder {
     public void addDetails(final String productCode, final BundlingDetails details) {
         detailsPerProduct.put(productCode, details);
     }
+
+    @Override
+    public String toString() {
+        return "BundledOrder{" + "detailsPerProduct=" + detailsPerProduct + '}';
+    }
+
 }
