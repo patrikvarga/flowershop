@@ -52,7 +52,7 @@ Things that I considered overkill for test code at this point:
 
 * 100% test coverage was clearly not the goal.
   Testing is demonstrated for some portions of the JSON catalog reader,
-  the order processing (bundling), and order input file reading;
+  mostly the order processing (bundling), and a bit of order input file reading;
   but **not** for the product catalog or the coin change problem solver itself etc.
 * Not using Mockito in unit tests as mocking is still pretty simple using POJOs.
 
@@ -65,3 +65,6 @@ Other considerations:
 * Error handling is not fully polished. (Referring to the use of RuntimeExceptions for example.)
 * Depending on where complexity shifts in the future, it might make sense to do unit testing
   in a more fine-grained manner, i.e. test some (currently private) methods separately.
+* Product catalog JSON and logger config is packaged into the application.
+  This is not production-grade as they should be externalized.
+
