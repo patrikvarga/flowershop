@@ -38,4 +38,9 @@ public class BundlingDetails {
         return new HashMap<>(bundles);
     }
 
+    @Override
+    public String toString() {
+        return "BundlingDetails{" + "amount=" + amount + ", totalCost=" + totalCost + ", bundles=" + bundles + '}';
+    }
+
 }
